@@ -11,39 +11,21 @@
 
 [![Community Forum][forum-shield]][forum]
 
-_Component to integrate with [temperature_feels_like][component]._
-
-**This component will set up the following platforms.**
-
-Platform | Description
--- | --
-`binary_sensor` | Show something `True` or `False`.
-`sensor` | Show info from API.
-`switch` | Switch something `True` or `False`.
-
-![example][exampleimg]
+_Sensor of Temperature Feels Like for Home Assistant._
 
 ## Features:
 
-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-- Phasellus blandit massa non tellus:
-    - Pellentesque blandit. Etiam sapien.
-    - Quisque sed massa ac tortor accumsan bibendum.
-    - Donec et orci quis mi sollicitudin consectetuer.
-- Donec malesuada. Pellentesque bibendum pellentesque elit.
-- Morbi et diam ac wisi auctor fringilla.
+- Can use any weather provider as source.
+- Can use climate entity as source.
+- Can use list of sensors as sources.
 
 {% if not installed %}
 ## Installation
 
 1. Click install.
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Blueprint".
+1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Temperature Feels Like".
 
 {% endif %}
-## Configuration is done in the UI
-
-<!---->
-
 ## Useful Links
 
 - [Documentation][component]

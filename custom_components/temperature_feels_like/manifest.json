@@ -1,6 +1,6 @@
 {
     "domain": "temperature_feels_like",
-    "name": "Temperature Feeling",
+    "name": "Temperature Feels Like",
     "version": "0.1.0.dev0",
     "documentation": "https://github.com/Limych/ha-temperature-feeling",
     "issue_tracker": "https://github.com/Limych/ha-temperature-feeling/issues",

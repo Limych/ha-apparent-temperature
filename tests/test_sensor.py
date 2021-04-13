@@ -147,6 +147,7 @@ async def test__get_temperature(hass: HomeAssistant):
 
     entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
 
+    assert entity._get_temperature(None) is None
     assert entity._get_temperature("sensor.unexistent") is None
     assert entity._get_temperature("weather.test_monitored") == 12.0
     assert entity._get_temperature("sensor.test_temperature") == 20.0
@@ -158,8 +159,8 @@ async def test__get_humidity(hass: HomeAssistant):
 
     entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
 
-    assert entity._get_humidity(None) == 0.0
-    assert entity._get_humidity("sensor.unexistent") == 0.0
+    assert entity._get_humidity(None) is None
+    assert entity._get_humidity("sensor.unexistent") is None
     assert entity._get_humidity("weather.test_monitored") == 32.0
     assert entity._get_humidity("sensor.test_humidity") == 40.0
 

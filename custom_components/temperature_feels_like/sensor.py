@@ -177,8 +177,10 @@ class TemperatureFeelingSensor(Entity):
             "",
         ]
 
-    def _get_temperature(self, entity_id: str) -> Optional[float]:
+    def _get_temperature(self, entity_id: Optional[str]) -> Optional[float]:
         """Get temperature value (in °C) from entity."""
+        if entity_id is None:
+            return None
         state = self._hass.states.get(entity_id)  # type: LazyState
         if state is None:
             return None
@@ -210,10 +212,10 @@ class TemperatureFeelingSensor(Entity):
     def _get_humidity(self, entity_id: Optional[str]) -> Optional[float]:
         """Get humidity value from entity."""
         if entity_id is None:
-            return 0.0
+            return None
         state = self._hass.states.get(entity_id)  # type: LazyState
         if state is None:
-            return 0.0
+            return None
 
         domain = split_entity_id(state.entity_id)[0]
         if domain == WEATHER:
