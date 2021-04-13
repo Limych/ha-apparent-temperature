@@ -50,7 +50,7 @@ I put a lot of work into making this repo and component available and updated to
 [hacs]: https://hacs.xyz
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
-[forum]: https://community.home-assistant.io/
+[forum]: https://community.home-assistant.io/t/sensor-of-temperature-feels-like/299063
 [license]: https://github.com/Limych/ha-temperature-feeling/blob/main/LICENSE.md
 [license-shield]: https://img.shields.io/badge/license-Creative_Commons_BY--NC--SA_License-lightgray.svg?style=popout
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Andrey%20Khrolenok%20%40Limych-blue.svg?style=popout
