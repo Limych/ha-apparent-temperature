@@ -188,6 +188,7 @@ async def test_async_update(hass: HomeAssistant):
     assert entity.state is None
 
     entity._temp = "weather.test_monitored"
+    entity._humd = "weather.test_monitored"
     await entity.async_update()
     assert entity.state is not None
-    assert entity.state == 7.8
+    assert entity.state == 9.3
