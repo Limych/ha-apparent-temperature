@@ -27,21 +27,21 @@ File | Purpose
 `.github/ISSUE_TEMPLATE/issue.md` | Template for issues
 `.github/settings.yml` | Probot settings to control the repository settings.
 `.vscode/tasks.json` | Tasks for the devcontainer.
-`custom_components/integration_blueprint/translations/*` | [Translation files.](https://developers.home-assistant.io/docs/internationalization/custom_integration)
-`custom_components/integration_blueprint/__init__.py` | The component file for the integration.
-`custom_components/integration_blueprint/api.py` | This is a sample API client.
-`custom_components/integration_blueprint/binary_sensor.py` | Binary sensor platform for the integration.
-`custom_components/integration_blueprint/config_flow.py` | Config flow file, this adds the UI configuration possibilities.
-`custom_components/integration_blueprint/const.py` | A file to hold shared variables/constants for the entire integration.
-`custom_components/integration_blueprint/manifest.json` | A [manifest file](https://developers.home-assistant.io/docs/en/creating_integration_manifest.html) for Home Assistant.
-`custom_components/integration_blueprint/sensor.py` | Sensor platform for the integration.
-`custom_components/integration_blueprint/switch.py` | Switch sensor platform for the integration.
+`custom_components/temperature_feels_like/translations/*` | [Translation files.](https://developers.home-assistant.io/docs/internationalization/custom_integration)
+`custom_components/temperature_feels_like/__init__.py` | The component file for the integration.
+`custom_components/temperature_feels_like/api.py` | This is a sample API client.
+`custom_components/temperature_feels_like/binary_sensor.py` | Binary sensor platform for the integration.
+`custom_components/temperature_feels_like/config_flow.py` | Config flow file, this adds the UI configuration possibilities.
+`custom_components/temperature_feels_like/const.py` | A file to hold shared variables/constants for the entire integration.
+`custom_components/temperature_feels_like/manifest.json` | A [manifest file](https://developers.home-assistant.io/docs/en/creating_integration_manifest.html) for Home Assistant.
+`custom_components/temperature_feels_like/sensor.py` | Sensor platform for the integration.
+`custom_components/temperature_feels_like/switch.py` | Switch sensor platform for the integration.
 `tests/__init__.py` | Makes the `tests` folder a module.
 `tests/conftest.py` | Global [fixtures](https://docs.pytest.org/en/stable/fixture.html) used in tests to [patch](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) functions.
-`tests/test_api.py` | Tests for `custom_components/integration_blueprint/api.py`.
-`tests/test_config_flow.py` | Tests for `custom_components/integration_blueprint/config_flow.py`.
-`tests/test_init.py` | Tests for `custom_components/integration_blueprint/__init__.py`.
-`tests/test_switch.py` | Tests for `custom_components/integration_blueprint/switch.py`.
+`tests/test_api.py` | Tests for `custom_components/temperature_feels_like/api.py`.
+`tests/test_config_flow.py` | Tests for `custom_components/temperature_feels_like/config_flow.py`.
+`tests/test_init.py` | Tests for `custom_components/temperature_feels_like/__init__.py`.
+`tests/test_switch.py` | Tests for `custom_components/temperature_feels_like/switch.py`.
 `CONTRIBUTING.md` | Guidelines on how to contribute.
 `example.png` | Screenshot that demonstrate how it might look in the UI.
 `info.md` | An example on a info file (used by [hacs][hacs]).
@@ -60,7 +60,7 @@ File | Purpose
     git remote add origin https://github.com/YOUR_NEW_REPOSITORY
 
     # Apply blueprint repository
-    git remote add blueprint https://github.com/Limych/ha-blueprint.git
+    git remote add blueprint https://github.com/Limych/ha-temperature-feeling.git
     git fetch blueprint dev
     git reset --hard blueprint/dev
     git branch -M dev
@@ -72,7 +72,7 @@ File | Purpose
 * …or apply blueprint to an existing repository from the command line:
     ```bash
     # Apply blueprint repository
-    git remote add blueprint https://github.com/Limych/ha-blueprint.git
+    git remote add blueprint https://github.com/Limych/ha-temperature-feeling.git
     git fetch blueprint dev
     git merge blueprint/dev --allow-unrelated-histories
 
@@ -113,7 +113,7 @@ README content if this was a published component:
 
 *Please :star: this repo if you find it useful*
 
-# integration_blueprint
+# temperature_feels_like
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -124,7 +124,7 @@ README content if this was a published component:
 
 [![Community Forum][forum-shield]][forum]
 
-_Component to integrate with [integration_blueprint][component]._
+_Component to integrate with [temperature_feels_like][component]._
 
 **This component will set up the following platforms.**
 
@@ -156,8 +156,8 @@ Platform | Description
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 1. If you do not have a `custom_components` directory (folder) there, you need to create it.
-1. In the `custom_components` directory (folder) create a new folder called `integration_blueprint`.
-1. Download file `integration_blueprint.zip` from the [latest release section][releases-latest] in this repository.
+1. In the `custom_components` directory (folder) create a new folder called `temperature_feels_like`.
+1. Download file `temperature_feels_like.zip` from the [latest release section][releases-latest] in this repository.
 1. Extract _all_ files from this archive you downloaded in the directory (folder) you created.
 1. Restart Home Assistant
 1. _If you want to configure component via Home Assistant UI..._\
@@ -190,7 +190,7 @@ To enable debug logs use this configuration:
 logger:
   default: info
   logs:
-    custom_components.integration_blueprint: debug
+    custom_components.temperature_feels_like: debug
 ```
 ... then restart HA.
 
@@ -219,21 +219,21 @@ See separate [license file](LICENSE.md) for full text.
 
 ***
 
-[component]: https://github.com/Limych/ha-blueprint
-[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-blueprint.svg?style=popout
-[commits]: https://github.com/Limych/ha-blueprint/commits/master
+[component]: https://github.com/Limych/ha-temperature-feeling
+[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-temperature-feeling.svg?style=popout
+[commits]: https://github.com/Limych/ha-temperature-feeling/commits/master
 [hacs-shield]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=popout
 [hacs]: https://hacs.xyz
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [forum]: https://community.home-assistant.io/
-[license]: https://github.com/Limych/ha-blueprint/blob/main/LICENSE.md
+[license]: https://github.com/Limych/ha-temperature-feeling/blob/main/LICENSE.md
 [license-shield]: https://img.shields.io/badge/license-Creative_Commons_BY--NC--SA_License-lightgray.svg?style=popout
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Andrey%20Khrolenok%20%40Limych-blue.svg?style=popout
-[releases-shield]: https://img.shields.io/github/release/Limych/ha-blueprint.svg?style=popout
-[releases]: https://github.com/Limych/ha-blueprint/releases
-[releases-latest]: https://github.com/Limych/ha-blueprint/releases/latest
+[releases-shield]: https://img.shields.io/github/release/Limych/ha-temperature-feeling.svg?style=popout
+[releases]: https://github.com/Limych/ha-temperature-feeling/releases
+[releases-latest]: https://github.com/Limych/ha-temperature-feeling/releases/latest
 [user_profile]: https://github.com/Limych
-[report_bug]: https://github.com/Limych/ha-blueprint/issues/new?template=bug_report.md
-[suggest_idea]: https://github.com/Limych/ha-blueprint/issues/new?template=feature_request.md
-[contributors]: https://github.com/Limych/ha-blueprint/graphs/contributors
+[report_bug]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=bug_report.md
+[suggest_idea]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=feature_request.md
+[contributors]: https://github.com/Limych/ha-temperature-feeling/graphs/contributors

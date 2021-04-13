@@ -63,7 +63,7 @@ For more information, look at [the Remote Python Debugger integration documentat
 
 ## Developing with any editors + devcontainer
 
-This repository inherits the integration_blueprint repository. Since I do not use Visual Studio, I left all its settings, but made my own mechanism for quick and convenient code testing, which works with absolutely any editor (I use PyCharm). And it can even be run on a remote machine. The only limitation of this method is that it needs Linux to work. Perhaps, it might work on other systems as well, but I haven't tested it, sorry.
+This repository inherits the temperature_feels_like repository. Since I do not use Visual Studio, I left all its settings, but made my own mechanism for quick and convenient code testing, which works with absolutely any editor (I use PyCharm). And it can even be run on a remote machine. The only limitation of this method is that it needs Linux to work. Perhaps, it might work on other systems as well, but I haven't tested it, sorry.
 
 Similar first way in the container you will have a dedicated Home Assistant core instance running with your custom component code. You can configure this instance by updating the `./devcontainer/configuration.yaml` file.
 

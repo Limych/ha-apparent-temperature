@@ -11,7 +11,7 @@
 
 [![Community Forum][forum-shield]][forum]
 
-_Component to integrate with [integration_blueprint][component]._
+_Component to integrate with [temperature_feels_like][component]._
 
 **This component will set up the following platforms.**
 
@@ -61,21 +61,21 @@ I put a lot of work into making this repo and component available and updated to
 
 ***
 
-[component]: https://github.com/Limych/ha-blueprint
-[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-blueprint.svg?style=popout
-[commits]: https://github.com/Limych/ha-blueprint/commits/master
+[component]: https://github.com/Limych/ha-temperature-feeling
+[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-temperature-feeling.svg?style=popout
+[commits]: https://github.com/Limych/ha-temperature-feeling/commits/master
 [hacs-shield]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=popout
 [hacs]: https://hacs.xyz
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [forum]: https://community.home-assistant.io/
-[license]: https://github.com/Limych/ha-blueprint/blob/main/LICENSE.md
+[license]: https://github.com/Limych/ha-temperature-feeling/blob/main/LICENSE.md
 [license-shield]: https://img.shields.io/badge/license-Creative_Commons_BY--NC--SA_License-lightgray.svg?style=popout
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Andrey%20Khrolenok%20%40Limych-blue.svg?style=popout
-[releases-shield]: https://img.shields.io/github/release/Limych/ha-blueprint.svg?style=popout
-[releases]: https://github.com/Limych/ha-blueprint/releases
-[releases-latest]: https://github.com/Limych/ha-blueprint/releases/latest
+[releases-shield]: https://img.shields.io/github/release/Limych/ha-temperature-feeling.svg?style=popout
+[releases]: https://github.com/Limych/ha-temperature-feeling/releases
+[releases-latest]: https://github.com/Limych/ha-temperature-feeling/releases/latest
 [user_profile]: https://github.com/Limych
-[report_bug]: https://github.com/Limych/ha-blueprint/issues/new?template=bug_report.md
-[suggest_idea]: https://github.com/Limych/ha-blueprint/issues/new?template=feature_request.md
-[contributors]: https://github.com/Limych/ha-blueprint/graphs/contributors
+[report_bug]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=bug_report.md
+[suggest_idea]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=feature_request.md
+[contributors]: https://github.com/Limych/ha-temperature-feeling/graphs/contributors

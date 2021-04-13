@@ -1,9 +1,25 @@
 default_config:
 
 logger:
-  default: info
+  default: warning
   logs:
-    custom_components.integration_blueprint: debug
+    custom_components.temperature_feels_like: debug
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
 # debugpy:
+
+sensor:
+  - platform: temperature_feels_like
+    source: sensor.test_temperature,sensor.test_humidity
+
+  - platform: template
+    sensors:
+      test_temperature:
+        unit_of_measurement: "°C"
+        value_template: "{{ 20 }}"
+        device_class: temperature
+
+      test_humidity:
+        unit_of_measurement: "%"
+        value_template: "{{ 40 }}"
+        device_class: humidity
