@@ -145,6 +145,7 @@ class TemperatureFeelingSensor(Entity):
                     device_class == DEVICE_CLASS_TEMPERATURE
                     or domain in (WEATHER, CLIMATE)
                     or unit_of_measurement in TEMPERATURE_UNITS
+                    or entity_id.find("temperature") >= 0
                 ):
                     self._temp = entity_id
                     entities.add(entity_id)
@@ -153,11 +154,16 @@ class TemperatureFeelingSensor(Entity):
                     device_class == DEVICE_CLASS_HUMIDITY
                     or domain in (WEATHER, CLIMATE)
                     or unit_of_measurement == PERCENTAGE
+                    or entity_id.find("humidity") >= 0
                 ):
                     self._humd = entity_id
                     entities.add(entity_id)
 
-                if domain == WEATHER or unit_of_measurement == SPEED_METERS_PER_SECOND:
+                if (
+                    domain == WEATHER
+                    or unit_of_measurement == SPEED_METERS_PER_SECOND
+                    or entity_id.find("wind") >= 0
+                ):
                     self._wind = entity_id
                     entities.add(entity_id)
 

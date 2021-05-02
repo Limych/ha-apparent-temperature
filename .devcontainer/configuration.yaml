@@ -16,10 +16,10 @@ sensor:
     sensors:
       test_temperature:
         unit_of_measurement: "°C"
-        value_template: "{{ 20 }}"
+        value_template: "{{ 22.6 }}"
         device_class: temperature
 
       test_humidity:
-        unit_of_measurement: "%"
-        value_template: "{{ 40 }}"
-        device_class: humidity
+#        unit_of_measurement: "%"
+        value_template: "{{ 43 }}"
+#        device_class: humidity
