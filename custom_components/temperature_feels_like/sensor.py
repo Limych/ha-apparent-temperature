@@ -109,7 +109,14 @@ class TemperatureFeelingSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return self._name
+        if self._name:
+            return self._name
+
+        name = split_entity_id(self._sources[0])[1]
+        if name.find("temperature") < 0:
+            name += " Temperature"
+        name += " Feels Like"
+        return name
 
     @property
     def state(self):

@@ -13,6 +13,10 @@ from pytest_homeassistant_custom_component.common import assert_setup_component
 from custom_components.temperature_feels_like.const import DOMAIN
 from custom_components.temperature_feels_like.sensor import TemperatureFeelingSensor
 
+TEST_UNIQUE_ID = "test_id"
+TEST_NAME = "test_name"
+TEST_SOURCES = ["weather.test_monitored"]
+
 TEST_CONFIG = {
     CONF_PLATFORM: DOMAIN,
     CONF_SOURCE: "weather.test_monitored",
@@ -69,12 +73,16 @@ async def async_setup_test_entities(hass: HomeAssistant):
     await hass.async_block_till_done()
 
 
-async def test_entity_initialization(hass: HomeAssistant):
+async def test_entity_initialization():
     """Test sensor initialization."""
-    entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
+    entity = TemperatureFeelingSensor(None, TEST_NAME, TEST_SOURCES)
 
-    assert entity.unique_id == "test_monitored-1"
-    assert entity.name == "test"
+    assert entity.unique_id is None
+
+    entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, TEST_NAME, TEST_SOURCES)
+
+    assert entity.unique_id == TEST_UNIQUE_ID
+    assert entity.name == TEST_NAME
     assert entity.device_class == DEVICE_CLASS_TEMPERATURE
     assert entity.should_poll is False
     assert entity.available is True
@@ -88,7 +96,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     await hass.async_start()
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.temperature_feels_like_test_monitored_1")
+    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
     assert (
         state.attributes.get("friendly_name") == "test_monitored Temperature Feels Like"
     )
@@ -106,7 +114,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.temperature_feels_like_test_monitored_1")
+    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
     assert state is not None
     assert state.state == "15.8"
 
@@ -121,7 +129,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.temperature_feels_like_test_monitored_1")
+    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
     assert state is not None
     assert state.state == "-3.8"
 
@@ -136,7 +144,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.temperature_feels_like_test_monitored_1")
+    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
     assert state is not None
     assert state.state == "-18.2"
 
@@ -145,7 +153,8 @@ async def test__get_temperature(hass: HomeAssistant):
     """Test temperature getter."""
     await async_setup_test_entities(hass)
 
-    entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
+    entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, TEST_NAME, TEST_SOURCES)
+    entity.hass = hass
 
     assert entity._get_temperature(None) is None
     assert entity._get_temperature("sensor.unexistent") is None
@@ -157,7 +166,8 @@ async def test__get_humidity(hass: HomeAssistant):
     """Test humidity getter."""
     await async_setup_test_entities(hass)
 
-    entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
+    entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, TEST_NAME, TEST_SOURCES)
+    entity.hass = hass
 
     assert entity._get_humidity(None) is None
     assert entity._get_humidity("sensor.unexistent") is None
@@ -169,7 +179,8 @@ async def test__get_wind_speed(hass: HomeAssistant):
     """Test wind speed getter."""
     await async_setup_test_entities(hass)
 
-    entity = TemperatureFeelingSensor(hass, "test", ["weather.test_monitored"])
+    entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, TEST_NAME, TEST_SOURCES)
+    entity.hass = hass
 
     assert entity._get_wind_speed(None) == 0.0
     assert entity._get_wind_speed("sensor.unexistent") == 0.0
@@ -181,7 +192,10 @@ async def test_async_update(hass: HomeAssistant):
     """Test platform setup."""
     await async_setup_test_entities(hass)
 
-    entity = TemperatureFeelingSensor(hass, "test", ["weather.nonexistent"])
+    entity = TemperatureFeelingSensor(
+        TEST_UNIQUE_ID, TEST_NAME, ["weather.nonexistent"]
+    )
+    entity.hass = hass
 
     entity._temp = "weather.nonexistent"
     await entity.async_update()
