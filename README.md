@@ -67,6 +67,10 @@ I put a lot of work into making this repo and component available and updated to
   _(string) (Optional) (Default value: name of first source + " Temperature Feels Like")_\
   Name to use in the frontend.
 
+**unique_id**\
+  _(string) (Optional)_\
+  An ID that uniquely identifies this sensor. Set this to a unique value to allow customization through the UI.
+
 ## Track updates
 
 You can automatically track new versions of this component and update it by [HACS][hacs].

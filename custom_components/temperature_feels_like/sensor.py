@@ -21,6 +21,7 @@ from homeassistant.const import (
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_NAME,
     CONF_SOURCE,
+    CONF_UNIQUE_ID,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_TEMPERATURE,
     EVENT_HOMEASSISTANT_START,
@@ -47,6 +48,7 @@ PLATFORM_SCHEMA = cv.PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_SOURCE): cv.entity_ids,
         vol.Optional(CONF_NAME): cv.string,
+        vol.Optional(CONF_UNIQUE_ID): cv.string,
     }
 )
 
@@ -62,18 +64,25 @@ async def async_setup_platform(
     # Print startup message
     _LOGGER.info(STARTUP_MESSAGE)
 
-    name = config.get(CONF_NAME)
-    sources = config.get(CONF_SOURCE)
-
-    async_add_entities([TemperatureFeelingSensor(hass, name, sources)])
+    async_add_entities(
+        [
+            TemperatureFeelingSensor(
+                config.get(CONF_UNIQUE_ID),
+                config.get(CONF_NAME),
+                config.get(CONF_SOURCE),
+            )
+        ]
+    )
 
 
 class TemperatureFeelingSensor(Entity):
     """temperature_feels_like Sensor class."""
 
-    def __init__(self, hass: HomeAssistant, name: Optional[str], sources: List[str]):
+    def __init__(
+        self, unique_id: Optional[str], name: Optional[str], sources: List[str]
+    ):
         """Class initialization."""
-        self._hass = hass
+        self._unique_id = unique_id
         self._name = name
         self._sources = sources
 
@@ -81,8 +90,6 @@ class TemperatureFeelingSensor(Entity):
         self._temp = None
         self._humd = None
         self._wind = None
-
-        self._unique_id = "{}-{}".format(split_entity_id(sources[0])[1], len(sources))
 
     @property
     def unique_id(self):
@@ -112,7 +119,7 @@ class TemperatureFeelingSensor(Entity):
     @property
     def unit_of_measurement(self) -> Optional[str]:
         """Return the unit of measurement of this entity."""
-        return self._hass.config.units.temperature_unit
+        return self.hass.config.units.temperature_unit
 
     async def async_added_to_hass(self):
         """Register callbacks."""
@@ -128,7 +135,7 @@ class TemperatureFeelingSensor(Entity):
         def sensor_startup(event):
             """Update entity on startup."""
             if not self._name:
-                state = self._hass.states.get(self._sources[0])  # type: LazyState
+                state = self.hass.states.get(self._sources[0])  # type: LazyState
                 self._name = state.attributes["friendly_name"]
                 if self._name.lower().find("temperature") < 0:
                     self._name += " Temperature"
@@ -136,7 +143,7 @@ class TemperatureFeelingSensor(Entity):
 
             entities = set()
             for entity_id in self._sources:
-                state = self._hass.states.get(entity_id)  # type: LazyState
+                state = self.hass.states.get(entity_id)  # type: LazyState
                 domain = split_entity_id(state.entity_id)[0]
                 device_class = state.attributes.get(ATTR_DEVICE_CLASS)
                 unit_of_measurement = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
@@ -167,11 +174,11 @@ class TemperatureFeelingSensor(Entity):
                     self._wind = entity_id
                     entities.add(entity_id)
 
-            async_track_state_change(self._hass, list(entities), sensor_state_listener)
+            async_track_state_change(self.hass, list(entities), sensor_state_listener)
 
             self.async_schedule_update_ha_state(True)
 
-        self._hass.bus.async_listen_once(EVENT_HOMEASSISTANT_START, sensor_startup)
+        self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_START, sensor_startup)
 
     @staticmethod
     def _has_state(state) -> bool:
@@ -187,7 +194,7 @@ class TemperatureFeelingSensor(Entity):
         """Get temperature value (in °C) from entity."""
         if entity_id is None:
             return None
-        state = self._hass.states.get(entity_id)  # type: LazyState
+        state = self.hass.states.get(entity_id)  # type: LazyState
         if state is None:
             return None
 
@@ -219,7 +226,7 @@ class TemperatureFeelingSensor(Entity):
         """Get humidity value from entity."""
         if entity_id is None:
             return None
-        state = self._hass.states.get(entity_id)  # type: LazyState
+        state = self.hass.states.get(entity_id)  # type: LazyState
         if state is None:
             return None
 
@@ -240,7 +247,7 @@ class TemperatureFeelingSensor(Entity):
         """Get wind speed value from entity."""
         if entity_id is None:
             return 0.0
-        state = self._hass.states.get(entity_id)  # type: LazyState
+        state = self.hass.states.get(entity_id)  # type: LazyState
         if state is None:
             return 0.0
 
