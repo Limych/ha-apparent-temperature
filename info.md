@@ -47,9 +47,8 @@ I put a lot of work into making this repo and component available and updated to
 [component]: https://github.com/Limych/ha-temperature-feeling
 [commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-temperature-feeling.svg?style=popout
 [commits]: https://github.com/Limych/ha-temperature-feeling/commits/master
-[hacs-shield]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=popout
+[hacs-shield]: https://img.shields.io/badge/HACS-Default-orange.svg?style=popout
 [hacs]: https://hacs.xyz
-[exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [forum]: https://community.home-assistant.io/t/sensor-of-temperature-feels-like/299063
 [license]: https://github.com/Limych/ha-temperature-feeling/blob/main/LICENSE.md
