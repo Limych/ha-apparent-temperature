@@ -1,11 +1,22 @@
 # pylint: disable=protected-access,redefined-outer-name
 """The test for the sensor platform."""
+import pytest
 from homeassistant.components.weather import (
     ATTR_WEATHER_HUMIDITY,
     ATTR_WEATHER_TEMPERATURE,
     ATTR_WEATHER_WIND_SPEED,
 )
-from homeassistant.const import CONF_PLATFORM, CONF_SOURCE, DEVICE_CLASS_TEMPERATURE
+from homeassistant.const import (
+    CONF_PLATFORM,
+    CONF_SOURCE,
+    DEVICE_CLASS_TEMPERATURE,
+    PERCENTAGE,
+    SPEED_KILOMETERS_PER_HOUR,
+    SPEED_METERS_PER_SECOND,
+    SPEED_MILES_PER_HOUR,
+    TEMP_CELSIUS,
+    TEMP_FAHRENHEIT,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant_custom_component.common import assert_setup_component
@@ -35,7 +46,7 @@ async def async_setup_test_entities(hass: HomeAssistant):
                 "condition_template": "{{ 0 }}",
                 "temperature_template": "{{ 12 }}",
                 "humidity_template": "{{ 32 }}",
-                "wind_speed_template": "{{ 2 }}",
+                "wind_speed_template": "{{ 10 }}",
             }
         },
     )
@@ -52,17 +63,30 @@ async def async_setup_test_entities(hass: HomeAssistant):
                         CONF_PLATFORM: "template",
                         "sensors": {
                             "test_temperature": {
-                                "unit_of_measurement": "°C",
+                                "unit_of_measurement": TEMP_CELSIUS,
+                                "value_template": "{{ 20 }}",
+                                "device_class": "temperature",
+                            },
+                            "test_temperature_f": {
+                                "unit_of_measurement": TEMP_FAHRENHEIT,
                                 "value_template": "{{ 20 }}",
                                 "device_class": "temperature",
                             },
                             "test_humidity": {
-                                "unit_of_measurement": "%",
+                                "unit_of_measurement": PERCENTAGE,
                                 "value_template": "{{ 40 }}",
                                 "device_class": "humidity",
                             },
                             "test_wind_speed": {
-                                "unit_of_measurement": "m/s",
+                                "unit_of_measurement": SPEED_METERS_PER_SECOND,
+                                "value_template": "{{ 10 }}",
+                            },
+                            "test_wind_speed_kmh": {
+                                "unit_of_measurement": SPEED_KILOMETERS_PER_HOUR,
+                                "value_template": "{{ 10 }}",
+                            },
+                            "test_wind_speed_mph": {
+                                "unit_of_measurement": SPEED_MILES_PER_HOUR,
                                 "value_template": "{{ 10 }}",
                             },
                         },
@@ -101,7 +125,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
         state.attributes.get("friendly_name") == "test_monitored Temperature Feels Like"
     )
     assert state is not None
-    assert state.state == "7.9"
+    assert state.state == "7.4"
 
     hass.states.async_set(
         "weather.test_monitored",
@@ -146,7 +170,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
 
     state = hass.states.get("sensor.test_monitored_temperature_feels_like")
     assert state is not None
-    assert state.state == "-18.2"
+    assert state.state == "-8.1"
 
 
 async def test__get_temperature(hass: HomeAssistant):
@@ -160,6 +184,7 @@ async def test__get_temperature(hass: HomeAssistant):
     assert entity._get_temperature("sensor.unexistent") is None
     assert entity._get_temperature("weather.test_monitored") == 12.0
     assert entity._get_temperature("sensor.test_temperature") == 20.0
+    assert entity._get_temperature("sensor.test_temperature_f") == -7.0
 
 
 async def test__get_humidity(hass: HomeAssistant):
@@ -184,8 +209,14 @@ async def test__get_wind_speed(hass: HomeAssistant):
 
     assert entity._get_wind_speed(None) == 0.0
     assert entity._get_wind_speed("sensor.unexistent") == 0.0
-    assert entity._get_wind_speed("weather.test_monitored") == 2.0
+    assert entity._get_wind_speed("weather.test_monitored") == pytest.approx(2.77, 0.01)
     assert entity._get_wind_speed("sensor.test_wind_speed") == 10.0
+    assert entity._get_wind_speed("sensor.test_wind_speed_kmh") == pytest.approx(
+        2.77, 0.01
+    )
+    assert entity._get_wind_speed("sensor.test_wind_speed_mph") == pytest.approx(
+        4.47, 0.01
+    )
 
 
 async def test_async_update(hass: HomeAssistant):
