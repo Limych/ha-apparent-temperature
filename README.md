@@ -63,6 +63,12 @@ I put a lot of work into making this repo and component available and updated to
   For calculations sensor uses temperature, humidity and wind speed values. Temperature and humidity values is required. Wind speed value is optional.\
   Weather provider provide all values. Climate object provide only temperature and humidity.
 
+> **_Note_**:\
+> You can use groups of entities as a data source. These groups will be automatically expanded to individual entities.
+
+> **_Note_**:\
+> If you specify several sources of the same type of data (for example, a weather provider and a separate temperature sensor), the sensor uses only one of them as a source (the one that will be the last in the list). Therefore, the result of calculations can be unpredictable.
+
 **name:**\
   _(string) (Optional) (Default value: name of first source + " Temperature Feels Like")_\
   Name to use in the frontend.
