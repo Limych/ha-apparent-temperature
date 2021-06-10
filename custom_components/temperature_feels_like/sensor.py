@@ -151,13 +151,6 @@ class TemperatureFeelingSensor(Entity):
         @callback
         def sensor_startup(event):
             """Update entity on startup."""
-            if not self._name:
-                state = self.hass.states.get(self._sources[0])  # type: LazyState
-                self._name = state.name
-                if self._name.lower().find("temperature") < 0:
-                    self._name += " Temperature"
-                self._name += " Feels Like"
-
             entities = set()
             for entity_id in self._sources:
                 state = self.hass.states.get(entity_id)  # type: LazyState
@@ -190,6 +183,13 @@ class TemperatureFeelingSensor(Entity):
                 ):
                     self._wind = entity_id
                     entities.add(entity_id)
+
+            if not self._name:
+                state = self.hass.states.get(self._temp)  # type: LazyState
+                self._name = state.name
+                if self._name.lower().find("temperature") < 0:
+                    self._name += " Temperature"
+                self._name += " Feels Like"
 
             async_track_state_change(self.hass, list(entities), sensor_state_listener)
 

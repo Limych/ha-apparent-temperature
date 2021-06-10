@@ -26,11 +26,11 @@ from custom_components.temperature_feels_like.sensor import TemperatureFeelingSe
 
 TEST_UNIQUE_ID = "test_id"
 TEST_NAME = "test_name"
-TEST_SOURCES = ["weather.test_monitored"]
+TEST_SOURCES = ["group.test_group"]
 
 TEST_CONFIG = {
     CONF_PLATFORM: DOMAIN,
-    CONF_SOURCE: "weather.test_monitored",
+    CONF_SOURCE: TEST_SOURCES,
 }
 
 
@@ -48,6 +48,25 @@ async def async_setup_test_entities(hass: HomeAssistant):
                 "humidity_template": "{{ 32 }}",
                 "wind_speed_template": "{{ 10 }}",
             }
+        },
+    )
+    await hass.async_block_till_done()
+
+    assert await async_setup_component(
+        hass,
+        "group",
+        {
+            "group": {
+                "test_group": {
+                    "entities": [
+                        "sensor.test_temperature",
+                        "sensor.test_temperature_f",
+                        "sensor.test_humidity",
+                        "sensor.test_wind_speed",
+                        "weather.test_monitored",
+                    ],
+                },
+            },
         },
     )
     await hass.async_block_till_done()
@@ -112,6 +131,16 @@ async def test_entity_initialization():
     assert entity.available is True
     assert entity.state is None
 
+    entity = TemperatureFeelingSensor(
+        TEST_UNIQUE_ID, None, ["sensors.test_temperature"]
+    )
+
+    assert entity.name == "test_temperature Feels Like"
+
+    entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, None, ["sensors.test_humidity"])
+
+    assert entity.name == "test_humidity Temperature Feels Like"
+
 
 async def test_async_setup_platform(hass: HomeAssistant):
     """Test platform setup."""
@@ -120,7 +149,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     await hass.async_start()
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
+    state = hass.states.get("sensor.test_temperature_feels_like")
     assert (
         state.attributes.get("friendly_name") == "test_monitored Temperature Feels Like"
     )
@@ -138,7 +167,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
+    state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "15.8"
 
@@ -153,7 +182,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
+    state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "-3.8"
 
@@ -168,7 +197,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     await hass.async_block_till_done()
 
-    state = hass.states.get("sensor.test_monitored_temperature_feels_like")
+    state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "-8.1"
 
