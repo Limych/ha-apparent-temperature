@@ -15,3 +15,9 @@ If you have ANY issues with this you need to open an issue here:
 {ISSUE_URL}
 -------------------------------------------------------------------
 """
+
+
+# Attributes
+ATTR_TEMPERATURE_SOURCE = "temperature_source"
+ATTR_HUMIDITY_SOURCE = "humidity_source"
+ATTR_WIND_SPEED_SOURCE = "wind_speed_source"

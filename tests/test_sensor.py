@@ -21,7 +21,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant_custom_component.common import assert_setup_component
 
-from custom_components.temperature_feels_like.const import DOMAIN
+from custom_components.temperature_feels_like.const import (
+    ATTR_HUMIDITY_SOURCE,
+    ATTR_TEMPERATURE_SOURCE,
+    ATTR_WIND_SPEED_SOURCE,
+    DOMAIN,
+)
 from custom_components.temperature_feels_like.sensor import TemperatureFeelingSensor
 
 TEST_UNIQUE_ID = "test_id"
@@ -130,6 +135,11 @@ async def test_entity_initialization():
     assert entity.should_poll is False
     assert entity.available is True
     assert entity.state is None
+    assert entity.state_attributes == {
+        ATTR_TEMPERATURE_SOURCE: None,
+        ATTR_HUMIDITY_SOURCE: None,
+        ATTR_WIND_SPEED_SOURCE: None,
+    }
 
     entity = TemperatureFeelingSensor(
         TEST_UNIQUE_ID, None, ["sensors.test_temperature"]
@@ -155,6 +165,9 @@ async def test_async_setup_platform(hass: HomeAssistant):
     )
     assert state is not None
     assert state.state == "7.4"
+    assert state.attributes[ATTR_TEMPERATURE_SOURCE] == "weather.test_monitored"
+    assert state.attributes[ATTR_HUMIDITY_SOURCE] == "weather.test_monitored"
+    assert state.attributes[ATTR_WIND_SPEED_SOURCE] == "weather.test_monitored"
 
     hass.states.async_set(
         "weather.test_monitored",

@@ -8,9 +8,15 @@ logger:
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
 # debugpy:
 
+group:
+  test_group:
+    entities:
+      - sensor.test_temperature
+      - sensor.test_humidity
+
 sensor:
   - platform: temperature_feels_like
-    source: sensor.test_temperature,sensor.test_humidity
+    source: group.test_group
 
   - platform: template
     sensors:

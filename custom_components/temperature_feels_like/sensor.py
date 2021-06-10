@@ -42,7 +42,12 @@ from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.temperature import convert as convert_temperature
 from homeassistant.util.unit_system import TEMPERATURE_UNITS
 
-from .const import STARTUP_MESSAGE
+from .const import (
+    ATTR_HUMIDITY_SOURCE,
+    ATTR_TEMPERATURE_SOURCE,
+    ATTR_WIND_SPEED_SOURCE,
+    STARTUP_MESSAGE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -137,6 +142,15 @@ class TemperatureFeelingSensor(Entity):
     def unit_of_measurement(self) -> Optional[str]:
         """Return the unit of measurement of this entity."""
         return self.hass.config.units.temperature_unit
+
+    @property
+    def state_attributes(self):
+        """Return the state attributes."""
+        return {
+            ATTR_TEMPERATURE_SOURCE: self._temp,
+            ATTR_HUMIDITY_SOURCE: self._humd,
+            ATTR_WIND_SPEED_SOURCE: self._wind,
+        }
 
     async def async_added_to_hass(self):
         """Register callbacks."""
