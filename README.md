@@ -39,11 +39,25 @@
 
 ### Configuration Examples
 
+#### Weather Entity Example
+
 ```yaml
 # Example configuration.yaml entry
 sensor:
   - platform: temperature_feels_like
     source: weather.home
+```
+
+#### Independent Temperature and Humidity Entities Example
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: temperature_feels_like
+    name: 'Basement Feels Like Temperature'
+    source:
+      - sensor.basement_temperature
+      - sensor.basement_humidity
 ```
 
 <p align="center">* * *</p>
