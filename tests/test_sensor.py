@@ -113,6 +113,10 @@ async def async_setup_test_entities(hass: HomeAssistant):
                                 "unit_of_measurement": SPEED_MILES_PER_HOUR,
                                 "value_template": "{{ 10 }}",
                             },
+                            "test_unavailable": {
+                                "value_template": "{{ 10 }}",
+                                "availability_template": "{{ False }}",
+                            },
                         },
                     },
                 ],
@@ -251,6 +255,7 @@ async def test__get_wind_speed(hass: HomeAssistant):
 
     assert entity._get_wind_speed(None) == 0.0
     assert entity._get_wind_speed("sensor.unexistent") == 0.0
+    assert entity._get_wind_speed("sensor.test_unavailable") is None
     assert entity._get_wind_speed("weather.test_monitored") == pytest.approx(2.77, 0.01)
     assert entity._get_wind_speed("sensor.test_wind_speed") == 10.0
     assert entity._get_wind_speed("sensor.test_wind_speed_kmh") == pytest.approx(
@@ -271,6 +276,12 @@ async def test_async_update(hass: HomeAssistant):
     entity.hass = hass
 
     entity._temp = "weather.nonexistent"
+    entity._humd = "weather.test_monitored"
+    await entity.async_update()
+    assert entity.state is None
+
+    entity._temp = "weather.test_monitored"
+    entity._humd = "weather.nonexistent"
     await entity.async_update()
     assert entity.state is None
 
@@ -279,3 +290,17 @@ async def test_async_update(hass: HomeAssistant):
     await entity.async_update()
     assert entity.state is not None
     assert entity.state == 9.3
+
+    entity._temp = "weather.test_monitored"
+    entity._humd = "weather.test_monitored"
+    entity._wind = "sensor.test_unavailable"
+    await entity.async_update()
+    assert entity.state is not None
+    assert entity.state == 9.3
+
+    entity._temp = "weather.test_monitored"
+    entity._humd = "weather.test_monitored"
+    entity._wind = "weather.test_monitored"
+    await entity.async_update()
+    assert entity.state is not None
+    assert entity.state == 7.4
