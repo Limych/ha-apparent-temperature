@@ -1,5 +1,7 @@
 # pylint: disable=protected-access,redefined-outer-name
 """The test for the sensor platform."""
+from typing import Final
+
 import pytest
 from homeassistant.components.weather import (
     ATTR_WEATHER_HUMIDITY,
@@ -29,11 +31,11 @@ from custom_components.temperature_feels_like.const import (
 )
 from custom_components.temperature_feels_like.sensor import TemperatureFeelingSensor
 
-TEST_UNIQUE_ID = "test_id"
-TEST_NAME = "test_name"
-TEST_SOURCES = ["group.test_group"]
+TEST_UNIQUE_ID: Final = "test_id"
+TEST_NAME: Final = "test_name"
+TEST_SOURCES: Final = ["group.test_group"]
 
-TEST_CONFIG = {
+TEST_CONFIG: Final = {
     CONF_PLATFORM: DOMAIN,
     CONF_SOURCE: TEST_SOURCES,
 }
