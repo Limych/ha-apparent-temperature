@@ -39,7 +39,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_state_change
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.util.temperature import convert as convert_temperature
+from homeassistant.util.unit_conversion import TemperatureConverter
 from homeassistant.util.unit_system import TEMPERATURE_UNITS
 
 from .const import (
@@ -244,7 +244,7 @@ class TemperatureFeelingSensor(Entity):
             return None
 
         try:
-            temperature = convert_temperature(
+            temperature = TemperatureConverter.convert(
                 float(temperature), entity_unit, TEMP_CELSIUS
             )
         except ValueError as exc:
@@ -326,7 +326,7 @@ class TemperatureFeelingSensor(Entity):
         e_value = humd * 0.06105 * math.exp((17.27 * temp) / (237.7 + temp))
         feeling = temp + 0.348 * e_value - 0.7 * wind - 4.25
         self._state = round(
-            convert_temperature(feeling, TEMP_CELSIUS, self.unit_of_measurement), 1
+            TemperatureConverter.convert(feeling, TEMP_CELSIUS, self.unit_of_measurement), 1
         )
         _LOGGER.debug(
             "New sensor state is %s %s", self._state, self.unit_of_measurement
