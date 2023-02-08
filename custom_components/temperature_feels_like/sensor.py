@@ -1,22 +1,23 @@
 """Sensor platform for temperature_feels_like."""
+from collections.abc import Callable
 import logging
 import math
-from typing import Callable, List, Optional
+from typing import List, Optional
 
 import voluptuous as vol
+
 from homeassistant.components.climate import (
     ATTR_CURRENT_HUMIDITY,
     ATTR_CURRENT_TEMPERATURE,
+    DOMAIN as CLIMATE,
 )
-from homeassistant.components.climate import DOMAIN as CLIMATE
 from homeassistant.components.group import expand_entity_ids
-from homeassistant.components.recorder.models import LazyState
 from homeassistant.components.weather import (
     ATTR_WEATHER_HUMIDITY,
     ATTR_WEATHER_TEMPERATURE,
     ATTR_WEATHER_WIND_SPEED,
+    DOMAIN as WEATHER,
 )
-from homeassistant.components.weather import DOMAIN as WEATHER
 from homeassistant.const import (
     ATTR_DEVICE_CLASS,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -40,7 +41,7 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_state_change
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.unit_conversion import TemperatureConverter
-from homeassistant.util.unit_system import TEMPERATURE_UNITS
+from homeassistant.util.unit_system import METRIC_SYSTEM, TEMPERATURE_UNITS
 
 from .const import (
     ATTR_HUMIDITY_SOURCE,
@@ -326,7 +327,10 @@ class TemperatureFeelingSensor(Entity):
         e_value = humd * 0.06105 * math.exp((17.27 * temp) / (237.7 + temp))
         feeling = temp + 0.348 * e_value - 0.7 * wind - 4.25
         self._state = round(
-            TemperatureConverter.convert(feeling, TEMP_CELSIUS, self.unit_of_measurement), 1
+            TemperatureConverter.convert(
+                feeling, TEMP_CELSIUS, self.unit_of_measurement
+            ),
+            1,
         )
         _LOGGER.debug(
             "New sensor state is %s %s", self._state, self.unit_of_measurement
