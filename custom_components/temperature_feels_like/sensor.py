@@ -287,7 +287,7 @@ class TemperatureFeelingSensor(Entity):
             wind_speed = state.attributes.get(ATTR_WEATHER_WIND_SPEED)
             entity_unit = (
                 SPEED_KILOMETERS_PER_HOUR
-                if self.hass.config.units.is_metric
+                if self.hass.config.units is METRIC_SYSTEM
                 else SPEED_MILES_PER_HOUR
             )
         else:
