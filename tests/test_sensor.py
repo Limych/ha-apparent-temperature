@@ -25,8 +25,11 @@ from pytest_homeassistant_custom_component.common import assert_setup_component
 
 from custom_components.temperature_feels_like.const import (
     ATTR_HUMIDITY_SOURCE,
+    ATTR_HUMIDITY_SOURCE_VALUE,
     ATTR_TEMPERATURE_SOURCE,
+    ATTR_TEMPERATURE_SOURCE_VALUE,
     ATTR_WIND_SPEED_SOURCE,
+    ATTR_WIND_SPEED_SOURCE_VALUE,
     DOMAIN,
 )
 from custom_components.temperature_feels_like.sensor import TemperatureFeelingSensor
@@ -143,8 +146,11 @@ async def test_entity_initialization():
     assert entity.state is None
     assert entity.state_attributes == {
         ATTR_TEMPERATURE_SOURCE: None,
+        ATTR_TEMPERATURE_SOURCE_VALUE: None,
         ATTR_HUMIDITY_SOURCE: None,
+        ATTR_HUMIDITY_SOURCE_VALUE: None,
         ATTR_WIND_SPEED_SOURCE: None,
+        ATTR_WIND_SPEED_SOURCE_VALUE: None,
     }
 
     entity = TemperatureFeelingSensor(
@@ -189,6 +195,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "15.8"
+    assert state.attributes[ATTR_TEMPERATURE_SOURCE_VALUE] == 20
 
     hass.states.async_set(
         "weather.test_monitored",
@@ -204,6 +211,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "-3.8"
+    assert state.attributes[ATTR_HUMIDITY_SOURCE_VALUE] == 20
 
     hass.states.async_set(
         "weather.test_monitored",
@@ -219,6 +227,7 @@ async def test_async_setup_platform(hass: HomeAssistant):
     state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "-8.1"
+    assert state.attributes[ATTR_WIND_SPEED_SOURCE_VALUE] == 20
 
 
 async def test__get_temperature(hass: HomeAssistant):
