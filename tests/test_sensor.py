@@ -32,7 +32,7 @@ from custom_components.temperature_feels_like.const import (
     ATTR_WIND_SPEED_SOURCE_VALUE,
     DOMAIN,
 )
-from custom_components.temperature_feels_like.sensor import TemperatureFeelingSensor
+from custom_components.temperature_feels_like.sensor import WIND_SPEED_UNITS, TemperatureFeelingSensor
 
 TEST_UNIQUE_ID: Final = "test_id"
 TEST_NAME: Final = "test_name"
@@ -227,7 +227,9 @@ async def test_async_setup_platform(hass: HomeAssistant):
     state = hass.states.get("sensor.test_temperature_feels_like")
     assert state is not None
     assert state.state == "-8.1"
-    assert state.attributes[ATTR_WIND_SPEED_SOURCE_VALUE] == 20
+    assert state.attributes[ATTR_WIND_SPEED_SOURCE_VALUE] == pytest.approx(
+        20 / WIND_SPEED_UNITS[SPEED_KILOMETERS_PER_HOUR], 0.01
+    )
 
 
 async def test__get_temperature(hass: HomeAssistant):
