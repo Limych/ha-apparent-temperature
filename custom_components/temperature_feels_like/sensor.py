@@ -156,7 +156,7 @@ class TemperatureFeelingSensor(Entity):
         """Return the state attributes."""
         return {
             ATTR_TEMPERATURE_SOURCE: self._temp,
-            ATTR_HUMIDITY_SOURCE_VALUE: self._temp_val,
+            ATTR_TEMPERATURE_SOURCE_VALUE: self._temp_val,
             ATTR_HUMIDITY_SOURCE: self._humd,
             ATTR_HUMIDITY_SOURCE_VALUE: self._humd_val,
             ATTR_WIND_SPEED_SOURCE: self._wind,
