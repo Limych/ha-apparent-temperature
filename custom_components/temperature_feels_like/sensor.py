@@ -46,8 +46,11 @@ from homeassistant.util.unit_system import METRIC_SYSTEM, TEMPERATURE_UNITS
 
 from .const import (
     ATTR_HUMIDITY_SOURCE,
+    ATTR_HUMIDITY_SOURCE_VALUE,
     ATTR_TEMPERATURE_SOURCE,
+    ATTR_TEMPERATURE_SOURCE_VALUE,
     ATTR_WIND_SPEED_SOURCE,
+    ATTR_WIND_SPEED_SOURCE_VALUE,
     STARTUP_MESSAGE,
 )
 
@@ -107,6 +110,9 @@ class TemperatureFeelingSensor(Entity):
         self._temp = None
         self._humd = None
         self._wind = None
+        self._temp_val = None
+        self._humd_val = None
+        self._wind_val = None
 
     @property
     def unique_id(self):
@@ -150,8 +156,11 @@ class TemperatureFeelingSensor(Entity):
         """Return the state attributes."""
         return {
             ATTR_TEMPERATURE_SOURCE: self._temp,
+            ATTR_TEMPERATURE_SOURCE_VALUE: self._temp_val,
             ATTR_HUMIDITY_SOURCE: self._humd,
+            ATTR_HUMIDITY_SOURCE_VALUE: self._humd_val,
             ATTR_WIND_SPEED_SOURCE: self._wind,
+            ATTR_WIND_SPEED_SOURCE_VALUE: self._wind_val,
         }
 
     async def async_added_to_hass(self):
@@ -306,9 +315,9 @@ class TemperatureFeelingSensor(Entity):
 
     async def async_update(self):
         """Update sensor state."""
-        temp = self._get_temperature(self._temp)  # °C
-        humd = self._get_humidity(self._humd)  # %
-        wind = self._get_wind_speed(self._wind)  # m/s
+        self._temp_val = temp = self._get_temperature(self._temp)  # °C
+        self._humd_val = humd = self._get_humidity(self._humd)  # %
+        self._wind_val = wind = self._get_wind_speed(self._wind)  # m/s
 
         _LOGGER.debug("Temp: %s °C  Hum: %s %%  Wind: %s m/s", temp, humd, wind)
 
