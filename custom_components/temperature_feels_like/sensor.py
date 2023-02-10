@@ -12,6 +12,7 @@ from homeassistant.components.climate import (
     DOMAIN as CLIMATE,
 )
 from homeassistant.components.group import expand_entity_ids
+from homeassistant.components.recorder.models import LazyState
 from homeassistant.components.weather import (
     ATTR_WEATHER_HUMIDITY,
     ATTR_WEATHER_TEMPERATURE,
@@ -168,7 +169,7 @@ class TemperatureFeelingSensor(Entity):
             """Update entity on startup."""
             entities = set()
             for entity_id in self._sources:
-                state = self.hass.states.get(entity_id)  # type: LazyState
+                state: LazyState = self.hass.states.get(entity_id)
                 domain = split_entity_id(state.entity_id)[0]
                 device_class = state.attributes.get(ATTR_DEVICE_CLASS)
                 unit_of_measurement = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
@@ -200,7 +201,7 @@ class TemperatureFeelingSensor(Entity):
                     entities.add(entity_id)
 
             if not self._name:
-                state = self.hass.states.get(self._temp)  # type: LazyState
+                state: LazyState = self.hass.states.get(self._temp)
                 self._name = state.name
                 if self._name.lower().find("temperature") < 0:
                     self._name += " Temperature"
@@ -226,7 +227,7 @@ class TemperatureFeelingSensor(Entity):
         """Get temperature value (in °C) from entity."""
         if entity_id is None:
             return None
-        state = self.hass.states.get(entity_id)  # type: LazyState
+        state: LazyState = self.hass.states.get(entity_id)
         if state is None:
             return None
 
@@ -258,7 +259,7 @@ class TemperatureFeelingSensor(Entity):
         """Get humidity value from entity."""
         if entity_id is None:
             return None
-        state = self.hass.states.get(entity_id)  # type: LazyState
+        state: LazyState = self.hass.states.get(entity_id)
         if state is None:
             return None
 
@@ -279,7 +280,7 @@ class TemperatureFeelingSensor(Entity):
         """Get wind speed value from entity."""
         if entity_id is None:
             return 0.0
-        state = self.hass.states.get(entity_id)  # type: LazyState
+        state: LazyState = self.hass.states.get(entity_id)
         if state is None:
             return 0.0
 
