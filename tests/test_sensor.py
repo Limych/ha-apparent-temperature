@@ -3,24 +3,6 @@
 from typing import Final
 
 import pytest
-from homeassistant.components.weather import (
-    ATTR_WEATHER_HUMIDITY,
-    ATTR_WEATHER_TEMPERATURE,
-    ATTR_WEATHER_WIND_SPEED,
-)
-from homeassistant.const import (
-    CONF_PLATFORM,
-    CONF_SOURCE,
-    DEVICE_CLASS_TEMPERATURE,
-    PERCENTAGE,
-    SPEED_KILOMETERS_PER_HOUR,
-    SPEED_METERS_PER_SECOND,
-    SPEED_MILES_PER_HOUR,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
-)
-from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
 from pytest_homeassistant_custom_component.common import assert_setup_component
 
 from custom_components.temperature_feels_like.const import (
@@ -32,7 +14,29 @@ from custom_components.temperature_feels_like.const import (
     ATTR_WIND_SPEED_SOURCE_VALUE,
     DOMAIN,
 )
-from custom_components.temperature_feels_like.sensor import WIND_SPEED_UNITS, TemperatureFeelingSensor
+from custom_components.temperature_feels_like.sensor import (
+    WIND_SPEED_UNITS,
+    TemperatureFeelingSensor,
+)
+from homeassistant.components.number import NumberDeviceClass
+from homeassistant.components.sensor import SensorStateClass
+from homeassistant.components.weather import (
+    ATTR_WEATHER_HUMIDITY,
+    ATTR_WEATHER_TEMPERATURE,
+    ATTR_WEATHER_WIND_SPEED,
+)
+from homeassistant.const import (
+    CONF_PLATFORM,
+    CONF_SOURCE,
+    PERCENTAGE,
+    SPEED_KILOMETERS_PER_HOUR,
+    SPEED_METERS_PER_SECOND,
+    SPEED_MILES_PER_HOUR,
+    TEMP_CELSIUS,
+    TEMP_FAHRENHEIT,
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.setup import async_setup_component
 
 TEST_UNIQUE_ID: Final = "test_id"
 TEST_NAME: Final = "test_name"
@@ -130,7 +134,7 @@ async def async_setup_test_entities(hass: HomeAssistant):
     await hass.async_block_till_done()
 
 
-async def test_entity_initialization():
+async def test_entity_initialization(hass: HomeAssistant):
     """Test sensor initialization."""
     entity = TemperatureFeelingSensor(None, TEST_NAME, TEST_SOURCES)
 
@@ -138,13 +142,16 @@ async def test_entity_initialization():
 
     entity = TemperatureFeelingSensor(TEST_UNIQUE_ID, TEST_NAME, TEST_SOURCES)
 
+    entity.hass = hass
+
     assert entity.unique_id == TEST_UNIQUE_ID
     assert entity.name == TEST_NAME
-    assert entity.device_class == DEVICE_CLASS_TEMPERATURE
+    assert entity.device_class == NumberDeviceClass.TEMPERATURE
+    assert entity.state_class == SensorStateClass.MEASUREMENT
     assert entity.should_poll is False
     assert entity.available is True
     assert entity.state is None
-    assert entity.state_attributes == {
+    assert entity.extra_state_attributes == {
         ATTR_TEMPERATURE_SOURCE: None,
         ATTR_TEMPERATURE_SOURCE_VALUE: None,
         ATTR_HUMIDITY_SOURCE: None,
@@ -164,11 +171,26 @@ async def test_entity_initialization():
     assert entity.name == "test_humidity Temperature Feels Like"
 
 
-async def test_async_setup_platform(hass: HomeAssistant):
+@pytest.mark.parametrize(
+    "temp, humi, wind, expected",
+    [(12, 32, 10, "7.4"), (20, 0, 0, "15.8"), (0, 20, 0, "-3.8"), (0, 0, 20, "-8.1")],
+)
+async def test_async_setup_platform(hass: HomeAssistant, temp, humi, wind, expected):
     """Test platform setup."""
     await async_setup_test_entities(hass)
 
     await hass.async_start()
+    await hass.async_block_till_done()
+
+    hass.states.async_set(
+        "weather.test_monitored",
+        "0",
+        {
+            ATTR_WEATHER_TEMPERATURE: temp,
+            ATTR_WEATHER_HUMIDITY: humi,
+            ATTR_WEATHER_WIND_SPEED: wind,
+        },
+    )
     await hass.async_block_till_done()
 
     state = hass.states.get("sensor.test_temperature_feels_like")
@@ -176,59 +198,14 @@ async def test_async_setup_platform(hass: HomeAssistant):
         state.attributes.get("friendly_name") == "test_monitored Temperature Feels Like"
     )
     assert state is not None
-    assert state.state == "7.4"
+    assert state.state == expected
     assert state.attributes[ATTR_TEMPERATURE_SOURCE] == "weather.test_monitored"
     assert state.attributes[ATTR_HUMIDITY_SOURCE] == "weather.test_monitored"
     assert state.attributes[ATTR_WIND_SPEED_SOURCE] == "weather.test_monitored"
-
-    hass.states.async_set(
-        "weather.test_monitored",
-        "0",
-        {
-            ATTR_WEATHER_TEMPERATURE: 20,
-            ATTR_WEATHER_HUMIDITY: 0,
-            ATTR_WEATHER_WIND_SPEED: 0,
-        },
-    )
-    await hass.async_block_till_done()
-
-    state = hass.states.get("sensor.test_temperature_feels_like")
-    assert state is not None
-    assert state.state == "15.8"
-    assert state.attributes[ATTR_TEMPERATURE_SOURCE_VALUE] == 20
-
-    hass.states.async_set(
-        "weather.test_monitored",
-        "0",
-        {
-            ATTR_WEATHER_TEMPERATURE: 0,
-            ATTR_WEATHER_HUMIDITY: 20,
-            ATTR_WEATHER_WIND_SPEED: 0,
-        },
-    )
-    await hass.async_block_till_done()
-
-    state = hass.states.get("sensor.test_temperature_feels_like")
-    assert state is not None
-    assert state.state == "-3.8"
-    assert state.attributes[ATTR_HUMIDITY_SOURCE_VALUE] == 20
-
-    hass.states.async_set(
-        "weather.test_monitored",
-        "0",
-        {
-            ATTR_WEATHER_TEMPERATURE: 0,
-            ATTR_WEATHER_HUMIDITY: 0,
-            ATTR_WEATHER_WIND_SPEED: 20,
-        },
-    )
-    await hass.async_block_till_done()
-
-    state = hass.states.get("sensor.test_temperature_feels_like")
-    assert state is not None
-    assert state.state == "-8.1"
+    assert state.attributes[ATTR_TEMPERATURE_SOURCE_VALUE] == temp
+    assert state.attributes[ATTR_HUMIDITY_SOURCE_VALUE] == humi
     assert state.attributes[ATTR_WIND_SPEED_SOURCE_VALUE] == pytest.approx(
-        20 / WIND_SPEED_UNITS[SPEED_KILOMETERS_PER_HOUR], 0.01
+        wind / WIND_SPEED_UNITS[SPEED_KILOMETERS_PER_HOUR], 0.01
     )
 
 
