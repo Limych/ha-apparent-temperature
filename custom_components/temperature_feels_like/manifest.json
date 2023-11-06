@@ -1,19 +1,19 @@
 {
     "domain": "temperature_feels_like",
     "name": "Temperature Feels Like",
-    "version": "0.3.8-alpha",
-    "documentation": "https://github.com/Limych/ha-temperature-feeling",
-    "issue_tracker": "https://github.com/Limych/ha-temperature-feeling/issues",
-    "dependencies": [],
     "after_dependencies": [
         "history",
         "recorder",
         "weather"
     ],
-    "config_flow": false,
     "codeowners": [
         "@Limych"
     ],
+    "config_flow": false,
+    "dependencies": [],
+    "documentation": "https://github.com/Limych/ha-temperature-feeling",
+    "iot_class": "calculated",
+    "issue_tracker": "https://github.com/Limych/ha-temperature-feeling/issues",
     "requirements": [],
-    "iot_class": "calculated"
+    "version": "0.3.8-alpha"
 }
