@@ -12,7 +12,6 @@ from homeassistant.components.climate import (
     DOMAIN as CLIMATE,
 )
 from homeassistant.components.group import expand_entity_ids
-from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
@@ -99,7 +98,7 @@ class TemperatureFeelingSensor(SensorEntity):
     """temperature_feels_like Sensor class."""
 
     _attr_icon = "mdi:thermometer-lines"
-    _attr_device_class = NumberDeviceClass.TEMPERATURE
+    _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class: SensorStateClass = SensorStateClass.MEASUREMENT
     _attr_should_poll: bool = False
     _attr_native_unit_of_measurement: str = UnitOfTemperature.CELSIUS
