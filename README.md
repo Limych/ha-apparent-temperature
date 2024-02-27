@@ -17,7 +17,8 @@
 ### Install from HACS (recommended)
 
 1. Have [HACS][hacs] installed, this will allow you to easily manage and track updates.
-1. Search for "Temperature Feels Like".
+1. Search in HACS for "Temperature Feels Like" integration or just press the button below:\
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)][hacs-repository]
 1. Click Install below the found integration.
 
 ... then if you want to use `configuration.yaml` to configure sensor...
@@ -134,22 +135,23 @@ See separate [license file](LICENSE.md) for full text.
 
 ***
 
-[component]: https://github.com/Limych/ha-temperature-feeling
-[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-temperature-feeling.svg?style=popout
-[commits]: https://github.com/Limych/ha-temperature-feeling/commits/master
+[component]: https://github.com/Limych/ha-temperature-feels-like
+[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/ha-temperature-feels-like.svg?style=popout
+[commits]: https://github.com/Limych/ha-temperature-feels-like/commits/master
 [hacs-shield]: https://img.shields.io/badge/HACS-Default-orange.svg?style=popout
 [hacs]: https://hacs.xyz
+[hacs-repository]: https://my.home-assistant.io/redirect/hacs_repository/?owner=Limych&repository=ha-temperature-feels-like&category=integration
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [forum]: https://community.home-assistant.io/t/sensor-of-temperature-feels-like/299063
-[license]: https://github.com/Limych/ha-temperature-feeling/blob/main/LICENSE.md
+[license]: https://github.com/Limych/ha-temperature-feels-like/blob/main/LICENSE.md
 [license-shield]: https://img.shields.io/badge/license-Creative_Commons_BY--NC--SA_License-lightgray.svg?style=popout
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Andrey%20Khrolenok%20%40Limych-blue.svg?style=popout
-[releases-shield]: https://img.shields.io/github/release/Limych/ha-temperature-feeling.svg?style=popout
-[releases]: https://github.com/Limych/ha-temperature-feeling/releases
-[releases-latest]: https://github.com/Limych/ha-temperature-feeling/releases/latest
+[releases-shield]: https://img.shields.io/github/release/Limych/ha-temperature-feels-like.svg?style=popout
+[releases]: https://github.com/Limych/ha-temperature-feels-like/releases
+[releases-latest]: https://github.com/Limych/ha-temperature-feels-like/releases/latest
 [user_profile]: https://github.com/Limych
-[report_bug]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=bug_report.md
-[suggest_idea]: https://github.com/Limych/ha-temperature-feeling/issues/new?template=feature_request.md
-[contributors]: https://github.com/Limych/ha-temperature-feeling/graphs/contributors
+[report_bug]: https://github.com/Limych/ha-temperature-feels-like/issues/new?template=bug_report.md
+[suggest_idea]: https://github.com/Limych/ha-temperature-feels-like/issues/new?template=feature_request.md
+[contributors]: https://github.com/Limych/ha-temperature-feels-like/graphs/contributors
 [patreon-shield]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DLimych%26type%3Dpatrons&style=popout
 [patreon]: https://www.patreon.com/join/limych
