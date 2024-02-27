@@ -2,7 +2,7 @@
     "name": "Temperature Feels Like",
     "filename": "temperature_feels_like.zip",
     "hide_default_branch": true,
-    "homeassistant": "2023.1.0",
+    "homeassistant": "2023.8.0",
     "render_readme": true,
     "zip_release": true
 }
