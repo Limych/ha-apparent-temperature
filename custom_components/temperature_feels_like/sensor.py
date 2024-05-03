@@ -36,9 +36,16 @@ from homeassistant.const import (
     UnitOfSpeed,
     UnitOfTemperature,
 )
-from homeassistant.core import HomeAssistant, State, callback, split_entity_id
+from homeassistant.core import (
+    Event,
+    EventStateChangedData,
+    HomeAssistant,
+    State,
+    callback,
+    split_entity_id,
+)
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.event import async_track_state_change
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.unit_conversion import TemperatureConverter
 from homeassistant.util.unit_system import METRIC_SYSTEM, TEMPERATURE_UNITS
@@ -149,7 +156,7 @@ class TemperatureFeelingSensor(SensorEntity):
 
         # pylint: disable=unused-argument
         @callback
-        def sensor_state_listener(entity, old_state, new_state):
+        def sensor_state_listener(event: Event[EventStateChangedData]) -> None:
             """Handle device state changes."""
             self.async_schedule_update_ha_state(True)
 
@@ -197,9 +204,11 @@ class TemperatureFeelingSensor(SensorEntity):
                     self._name += " Temperature"
                 self._name += " Feels Like"
 
-            async_track_state_change(self.hass, list(entities), sensor_state_listener)
+            async_track_state_change_event(
+                self.hass, list(entities), sensor_state_listener
+            )
 
-            self.async_schedule_update_ha_state(True)
+            self.async_schedule_update_ha_state(True)  # Force first update
 
         self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_START, sensor_startup)
 
