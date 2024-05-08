@@ -63,7 +63,6 @@ jobs:
     name: Test package on Python ${{ matrix.python-version }}
     needs: lint
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
