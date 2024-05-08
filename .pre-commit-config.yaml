@@ -7,20 +7,20 @@ repos:
         language: script
         files: ^(custom_components/.+/const\.py|requirements\.txt)$
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.241
+    rev: v0.3.5
     hooks:
       - id: ruff
         args:
           - --fix
         files: ^(custom_components|bin|tests)/.+\.py$
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.15.2
     hooks:
       - id: pyupgrade
-        args: [ --py310-plus ]
+        args: [ --py312-plus ]
         stages: [manual]
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 24.3.0
     hooks:
       - id: black
         args:
@@ -37,7 +37,7 @@ repos:
         files: ^(custom_components|bin|tests)/.+\.py$
         stages: [manual]
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.4
+    rev: 1.7.8
     hooks:
       - id: bandit
         args:

@@ -1,5 +1,8 @@
+[project]
+requires-python = ">=3.12"
+
 [tool.black]
-target-version = ["py310"]
+target-version = ["py312"]
 extend-exclude = "/generated/"
 
 [tool.isort]
@@ -17,7 +20,7 @@ forced_separate = [
 combine_as_imports = true
 
 [tool.pylint.MAIN]
-py-version = "3.10"
+py-version = "3.12"
 ignore = [
     "tests",
 ]
@@ -162,7 +165,7 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 asyncio_mode = "auto"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 
 select = [
     "C",  # complexity
