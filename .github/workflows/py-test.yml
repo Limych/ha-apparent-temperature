@@ -60,7 +60,7 @@ jobs:
           pylint ${{ env.package }} tests
 
   tests:
-    name: Test package on Python ${{ matrix.python-version }}
+    name: "Test package"
     needs: lint
     runs-on: ubuntu-latest
     steps:
