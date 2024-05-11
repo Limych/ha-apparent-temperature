@@ -1,5 +1,5 @@
 ARG BUILD_FROM BUILD_FROM_TAG
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV DEVCONTAINER=true
 
