@@ -12,7 +12,7 @@ mkdir -p /opt/container/makefiles
 mkdir -p /opt/container/helpers
 
 cp /container/container.mk /opt/container/container.mk
-cp -r /container/helpers /opt/container/helpers
+cp -r /container/helpers /opt/container/
 
 cp /container/container /usr/bin/container
 chmod +x /usr/bin/container
