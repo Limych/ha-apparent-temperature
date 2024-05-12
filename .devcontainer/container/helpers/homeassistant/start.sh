@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
 
-source /opt/container/helpers/common/paths.sh
+source /opt/container/helpers/paths.sh
 mkdir -p /config
 
 if test -f "$(workspacePath)config/configuration.yaml"; then
@@ -22,12 +22,12 @@ fi
 if test -d "$(workspacePath)custom_components"; then
   echo "Symlink the custom component directory"
 
-  if test -d "$(workspacePath)custom_components"; then
+  if test -d "/config/custom_components"; then
     rm -R /config/custom_components
   fi
 
   ln -sf "$(workspacePath)custom_components/" /config/custom_components || echo "Could not copy the custom_component" exit 1
-elif  test -f "__init__.py"; then
+elif test -f "__init__.py"; then
   echo "Having the component in the root is currently not supported"
 fi
 
