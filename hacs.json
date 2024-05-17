@@ -1,6 +1,6 @@
 {
-    "name": "Temperature Feels Like",
-    "filename": "temperature_feels_like.zip",
+    "name": "Apparent Temperature",
+    "filename": "apparent_temperature.zip",
     "hide_default_branch": true,
     "homeassistant": "2024.4.0",
     "render_readme": true,

@@ -3,7 +3,7 @@ default_config:
 logger:
   default: warning
   logs:
-    custom_components.temperature_feels_like: debug
+    custom_components.apparent_temperature: debug
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
 # debugpy:
@@ -15,7 +15,7 @@ group:
       - sensor.test_humidity
 
 sensor:
-  - platform: temperature_feels_like
+  - platform: apparent_temperature
     source: group.test_group
 
   - platform: template

@@ -1,10 +1,10 @@
-"""Constants for temperature_feels_like."""
+"""Constants for apparent_temperature."""
 
 # Base component constants
 from typing import Final
 
-NAME: Final = "Temperature Feels Like"
-DOMAIN: Final = "temperature_feels_like"
+NAME: Final = "Apparent Temperature"
+DOMAIN: Final = "apparent_temperature"
 VERSION: Final = "0.3.10-alpha"
 ISSUE_URL: Final = "https://github.com/Limych/ha-temperature-feeling/issues"
 
