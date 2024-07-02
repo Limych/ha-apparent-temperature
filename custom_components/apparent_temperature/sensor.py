@@ -319,7 +319,7 @@ class ApparentTemperatureSensor(SensorEntity):
             wind = 0
 
         e_value = humd * 0.06105 * math.exp((17.27 * temp) / (237.7 + temp))
-        self._attr_native_value = round(temp + 0.348 * e_value - 0.7 * wind - 4.25, 1)
+        self._attr_native_value = round(temp + 0.348 * e_value - 0.7 * wind - 4.25, 3)
         _LOGGER.debug(
             "New sensor state is %s %s",
             self._attr_native_value,
