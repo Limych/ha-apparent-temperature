@@ -1,8 +1,6 @@
 {
     "name": "Apparent Temperature",
-    "filename": "apparent_temperature.zip",
     "hide_default_branch": true,
-    "homeassistant": "2024.4.0",
-    "render_readme": true,
-    "zip_release": true
+    "homeassistant": "2024.6.0",
+    "render_readme": true
 }
