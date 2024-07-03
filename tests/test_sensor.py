@@ -124,12 +124,86 @@ async def async_setup_test_entities(hass: HomeAssistant):
                                 "value_template": "{{ 10 }}",
                                 "availability_template": "{{ False }}",
                             },
+                            "test_temperature_no_unit": {
+                                "value_template": "{{ 20 }}",
+                            },
+                            "test_humidity_no_unit": {
+                                "value_template": "{{ 40 }}",
+                            },
+                            "test_wind_speed_no_unit": {
+                                "value_template": "{{ 10 }}",
+                            },
                         },
                     },
                 ],
             },
         )
     await hass.async_block_till_done()
+
+    assert await async_setup_component(
+        hass,
+        "climate",
+        {
+            "climate": {
+                "platform": "generic_thermostat",
+                "name": "test_climate",
+                "heater": "switch.study_heater",
+                "target_sensor": "sensor.test_temperature",
+            }
+        },
+    )
+    await hass.async_block_till_done()
+
+
+async def test__setup_sources(hass: HomeAssistant):
+    """Test setup sensor sources."""
+    await async_setup_test_entities(hass)
+    entity = ApparentTemperatureSensor(None, TEST_NAME, TEST_SOURCES)
+    entity.hass = hass
+
+    assert entity._temp is None
+    assert entity._humd is None
+    assert entity._wind is None
+
+    entity._temp = entity._humd = entity._wind = None
+    entity._sources = ["weather.test_monitored"]
+    entity._setup_sources()
+
+    assert entity._temp == "weather.test_monitored"
+    assert entity._humd == "weather.test_monitored"
+    assert entity._wind == "weather.test_monitored"
+
+    entity._temp = entity._humd = entity._wind = None
+    entity._sources = ["climate.test_climate"]
+    entity._setup_sources()
+
+    assert entity._temp == "climate.test_climate"
+    assert entity._humd == "climate.test_climate"
+    assert entity._wind is None
+
+    entity._temp = entity._humd = entity._wind = None
+    entity._sources = [
+        "sensor.test_temperature",
+        "sensor.test_humidity",
+        "sensor.test_wind_speed",
+    ]
+    entity._setup_sources()
+
+    assert entity._temp == "sensor.test_temperature"
+    assert entity._humd == "sensor.test_humidity"
+    assert entity._wind == "sensor.test_wind_speed"
+
+    entity._temp = entity._humd = entity._wind = None
+    entity._sources = [
+        "sensor.test_temperature_no_unit",
+        "sensor.test_humidity_no_unit",
+        "sensor.test_wind_speed_no_unit",
+    ]
+    entity._setup_sources()
+
+    assert entity._temp == "sensor.test_temperature_no_unit"
+    assert entity._humd == "sensor.test_humidity_no_unit"
+    assert entity._wind == "sensor.test_wind_speed_no_unit"
 
 
 async def test_entity_initialization(hass: HomeAssistant):

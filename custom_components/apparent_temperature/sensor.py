@@ -151,6 +151,51 @@ class ApparentTemperatureSensor(SensorEntity):
             ATTR_WIND_SPEED_SOURCE_VALUE: self._wind_val,
         }
 
+    def _setup_sources(self) -> list[str]:
+        """Set sources for entity and return list of sources to track."""
+        entities = set()
+        for entity_id in self._sources:
+            state: State = self.hass.states.get(entity_id)
+            domain = split_entity_id(state.entity_id)[0]
+            device_class = state.attributes.get(ATTR_DEVICE_CLASS)
+            unit_of_measurement = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
+
+            if domain == WEATHER_DOMAIN:
+                self._temp = entity_id
+                self._humd = entity_id
+                self._wind = entity_id
+                entities.add(entity_id)
+            elif domain == CLIMATE_DOMAIN:
+                self._temp = entity_id
+                self._humd = entity_id
+                entities.add(entity_id)
+            elif (
+                device_class == SensorDeviceClass.TEMPERATURE
+                or unit_of_measurement in UnitOfTemperature
+            ):
+                self._temp = entity_id
+                entities.add(entity_id)
+            elif (
+                device_class == SensorDeviceClass.HUMIDITY
+                or unit_of_measurement == PERCENTAGE
+            ):
+                self._humd = entity_id
+                entities.add(entity_id)
+            elif unit_of_measurement in UnitOfSpeed:
+                self._wind = entity_id
+                entities.add(entity_id)
+            elif entity_id.find("temperature") >= 0:
+                self._temp = entity_id
+                entities.add(entity_id)
+            elif entity_id.find("humidity") >= 0:
+                self._humd = entity_id
+                entities.add(entity_id)
+            elif entity_id.find("wind") >= 0:
+                self._wind = entity_id
+                entities.add(entity_id)
+
+        return list(entities)
+
     async def async_added_to_hass(self):
         """Register callbacks."""
 
@@ -164,41 +209,8 @@ class ApparentTemperatureSensor(SensorEntity):
         @callback
         def sensor_startup(event):
             """Update entity on startup."""
-            entities = set()
-            for entity_id in self._sources:
-                state: State = self.hass.states.get(entity_id)
-                domain = split_entity_id(state.entity_id)[0]
-                device_class = state.attributes.get(ATTR_DEVICE_CLASS)
-                unit_of_measurement = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
-
-                if (
-                    device_class == SensorDeviceClass.TEMPERATURE
-                    or domain in (WEATHER_DOMAIN, CLIMATE_DOMAIN)
-                    or unit_of_measurement in UnitOfTemperature
-                    or entity_id.find("temperature") >= 0
-                ):
-                    self._temp = entity_id
-                    entities.add(entity_id)
-
-                if (
-                    device_class == SensorDeviceClass.HUMIDITY
-                    or domain in (WEATHER_DOMAIN, CLIMATE_DOMAIN)
-                    or unit_of_measurement == PERCENTAGE
-                    or entity_id.find("humidity") >= 0
-                ):
-                    self._humd = entity_id
-                    entities.add(entity_id)
-
-                if (
-                    domain == WEATHER_DOMAIN
-                    or unit_of_measurement in UnitOfSpeed
-                    or entity_id.find("wind") >= 0
-                ):
-                    self._wind = entity_id
-                    entities.add(entity_id)
-
             async_track_state_change_event(
-                self.hass, list(entities), sensor_state_listener
+                self.hass, self._setup_sources(), sensor_state_listener
             )
 
             self.async_schedule_update_ha_state(True)  # Force first update
