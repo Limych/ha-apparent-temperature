@@ -92,6 +92,9 @@ I put a lot of work into making this repo and component available and updated to
   _(string) (Optional)_\
   An ID that uniquely identifies this sensor. Set this to a unique value to allow customization through the UI.
 
+> **_Note_**:
+> You can use site [uuidgenerator.net](https://www.uuidgenerator.net/) to generate unique ID's.
+
 ## Track updates
 
 You can automatically track new versions of this component and update it by [HACS][hacs].

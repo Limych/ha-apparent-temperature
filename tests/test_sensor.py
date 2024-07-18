@@ -246,10 +246,10 @@ async def test_entity_initialization(hass: HomeAssistant):
 @pytest.mark.parametrize(
     "temp, humi, wind, expected",
     [
-        (12, 32, 10, "7.365"),
+        (12, 32, 10, "7.36460604026573"),
         (20, 0, 0, "15.75"),
-        (0, 20, 0, "-3.825"),
-        (0, 0, 20, "-8.139"),
+        (0, 20, 0, "-3.825092"),
+        (0, 0, 20, "-8.13888888888889"),
     ],
 )
 async def test_async_setup_platform(hass: HomeAssistant, temp, humi, wind, expected):
@@ -356,18 +356,18 @@ async def test_async_update(hass: HomeAssistant):
     entity._humd = "weather.test_monitored"
     await entity.async_update()
     assert entity.state is not None
-    assert entity.state == 9.309
+    assert entity.state == 9.309050484710173
 
     entity._temp = "weather.test_monitored"
     entity._humd = "weather.test_monitored"
     entity._wind = "sensor.test_unavailable"
     await entity.async_update()
     assert entity.state is not None
-    assert entity.state == 9.309
+    assert entity.state == 9.309050484710173
 
     entity._temp = "weather.test_monitored"
     entity._humd = "weather.test_monitored"
     entity._wind = "weather.test_monitored"
     await entity.async_update()
     assert entity.state is not None
-    assert entity.state == 7.365
+    assert entity.state == 7.364606040265729

@@ -16,6 +16,7 @@ group:
 
 sensor:
   - platform: apparent_temperature
+    unique_id: test
     source: group.test_group
 
   - platform: template
