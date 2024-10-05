@@ -45,10 +45,6 @@ repos:
           - --format=custom
           - --configfile=tests/bandit.yaml
         files: ^(custom_components|bin|tests)/.+\.py$
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
-    hooks:
-      - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
