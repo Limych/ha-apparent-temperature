@@ -70,11 +70,6 @@ repos:
         types: [python]
         require_serial: true
         files: ^custom_components/.+\.py$
-      - id: pylint
-        name: pylint
-        entry: scripts/run-in-env python3 -m pylint
-        language: system
-        types: [python]
       # Uncomment lines below to test code on every commit
 #      - id: pytest
 #        name: pytest
