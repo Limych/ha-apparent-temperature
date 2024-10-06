@@ -1,4 +1,5 @@
 """Constants for tests."""
+
 from typing import Final
 
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME

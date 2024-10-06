@@ -4,4 +4,4 @@
 
 def test_example():
     """Dumb test."""
-    assert int(2) == 2
+    assert int(2) == 2  # noqa: UP018

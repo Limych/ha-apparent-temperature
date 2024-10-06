@@ -8,56 +8,55 @@ on:
     - cron: "23 3 * * 1"
 
 jobs:
-  lint:
-    name: "Lint package"
+  ruff:
+    name: "Ruff"
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout code"
-        uses: actions/checkout@v4
+        - name: "Checkout the repository"
+          uses: actions/checkout@v4
 
-      - run: |
-          echo "package=$(ls -F | grep \/$ | grep -v "bin\|examples\|tests" | sed -n "s/\///g;1p")" >> $GITHUB_ENV
+        - name: "Set up Python"
+          uses: actions/setup-python@v5
+          with:
+            python-version-file: 'pyproject.toml'
+            cache: "pip"
 
-      - name: "Set up Python"
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: 'pyproject.toml'
+        - name: "Cache pip"
+          uses: actions/cache@v4
+          with:
+            # This path is specific to Ubuntu
+            path: ~/.cache/pip
+            # Look to see if there is a cache hit for the corresponding requirements file
+            key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+            restore-keys: |
+              ${{ runner.os }}-pip-
+              ${{ runner.os }}-
 
-      - name: "Cache pip"
-        uses: actions/cache@v4
-        with:
-          # This path is specific to Ubuntu
-          path: ~/.cache/pip
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
+        - name: "Install dependencies"
+          run: |
+            python -m pip install --upgrade pip
+            # Prefer requirements-dev.txt
+            if [ -f requirements-dev.txt ]; then
+              scripts/install_requirements requirements-dev.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
+            elif [ -f requirements-test.txt ]; then
+              scripts/install_requirements requirements-test.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
+            elif [ -f requirements.txt ]; then
+              scripts/install_requirements requirements.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
+            fi
 
-      - name: "Install dependencies"
-        run: |
-          python -m pip install --upgrade pip
-          # Prefer requirements-dev.txt
-          if [ -f requirements-dev.txt ]; then
-            scripts/install_requirements requirements-dev.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
-          elif [ -f requirements-test.txt ]; then
-            scripts/install_requirements requirements-test.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
-          elif [ -f requirements.txt ]; then
-            scripts/install_requirements requirements.txt "${{ secrets.ADMIN_GITHUB_TOKEN }}"
-          fi
+            if [ -d custom_components ]; then
+              echo '"""Stub."""' >custom_components/__init__.py
+            fi
 
-          if [ -d custom_components ]; then
-            echo '"""Stub."""' >custom_components/__init__.py
-          fi
+        - name: "Lint"
+          run: python3 -m ruff check .
 
-      - name: "Lint with flake8 & pylint"
-        run: |
-          flake8 ${{ env.package }} tests
-          pylint ${{ env.package }} tests
+        - name: "Format"
+          run: python3 -m ruff format . --check
 
   tests:
     name: "Test package"
-    needs: lint
+    needs: ruff
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout code"
@@ -67,6 +66,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: 'pyproject.toml'
+          cache: "pip"
 
       - name: "Cache pip"
         uses: actions/cache@v4
