@@ -25,4 +25,4 @@ keep-runtime-typing = true
 max-complexity = 25
 
 [lint.per-file-ignores]
-"tests/*.py" = ["ANN001", "ANN201", "S101", "SLF001"]
+"tests/*.py" = ["ANN001", "ANN201", "ARG001", "PLR2004", "S101", "S311", "SLF001"]
