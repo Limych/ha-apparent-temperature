@@ -14,6 +14,7 @@ ignore = [
     "COM812", # incompatible with formatter
     "ISC001", # incompatible with formatter
     "FIX002", # TODO provide context for future work
+    "PLR2044", # Line with empty comment
 ]
 
 [lint.flake8-pytest-style]
