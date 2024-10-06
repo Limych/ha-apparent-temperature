@@ -7,11 +7,12 @@ repos:
         language: script
         files: ^(custom_components/.+/const\.py|requirements\.txt)$
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.6.9
     hooks:
       - id: ruff
-        args:
-          - --fix
+        args: [ --fix ]
+        files: ^(custom_components|bin|tests)/.+\.py$
+      - id: ruff-format
         files: ^(custom_components|bin|tests)/.+\.py$
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.2
