@@ -20,14 +20,6 @@ repos:
       - id: pyupgrade
         args: [ --py312-plus ]
         stages: [manual]
-  - repo: https://github.com/psf/black
-    rev: 24.3.0
-    hooks:
-      - id: black
-        args:
-          - --safe
-          - --quiet
-        files: ^(custom_components|bin|tests)/.+\.py$
   - repo: https://github.com/pycqa/flake8.git
     rev: 6.0.0
     hooks:
