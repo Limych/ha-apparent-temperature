@@ -4,8 +4,8 @@ asynctest~=0.13
 colorlog~=6.8
 flake8~=7.1
 flake8-docstrings~=1.7
-mypy~=1.10
-pylint~=3.2
+mypy~=1.11
+pylint~=3.3
 pylint-strict-informational==0.1
 pytest>=7.2
 pytest-cov>=3.0

@@ -7,11 +7,12 @@ repos:
         language: script
         files: ^(custom_components/.+/const\.py|requirements\.txt)$
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.6.9
     hooks:
       - id: ruff
-        args:
-          - --fix
+        args: [ --fix ]
+        files: ^(custom_components|bin|tests)/.+\.py$
+      - id: ruff-format
         files: ^(custom_components|bin|tests)/.+\.py$
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.2
@@ -19,14 +20,6 @@ repos:
       - id: pyupgrade
         args: [ --py312-plus ]
         stages: [manual]
-  - repo: https://github.com/psf/black
-    rev: 24.3.0
-    hooks:
-      - id: black
-        args:
-          - --safe
-          - --quiet
-        files: ^(custom_components|bin|tests)/.+\.py$
   - repo: https://github.com/pycqa/flake8.git
     rev: 6.0.0
     hooks:
@@ -45,10 +38,6 @@ repos:
           - --format=custom
           - --configfile=tests/bandit.yaml
         files: ^(custom_components|bin|tests)/.+\.py$
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
-    hooks:
-      - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
@@ -74,11 +63,6 @@ repos:
         types: [python]
         require_serial: true
         files: ^custom_components/.+\.py$
-      - id: pylint
-        name: pylint
-        entry: scripts/run-in-env python3 -m pylint
-        language: system
-        types: [python]
       # Uncomment lines below to test code on every commit
 #      - id: pytest
 #        name: pytest
