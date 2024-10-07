@@ -1,20 +1,9 @@
 # pylint: disable=protected-access,redefined-outer-name
 """The test for the sensor platform."""
+
 from typing import Final
 
 import pytest
-from pytest_homeassistant_custom_component.common import assert_setup_component
-
-from custom_components.apparent_temperature.const import (
-    ATTR_HUMIDITY_SOURCE,
-    ATTR_HUMIDITY_SOURCE_VALUE,
-    ATTR_TEMPERATURE_SOURCE,
-    ATTR_TEMPERATURE_SOURCE_VALUE,
-    ATTR_WIND_SPEED_SOURCE,
-    ATTR_WIND_SPEED_SOURCE_VALUE,
-    DOMAIN,
-)
-from custom_components.apparent_temperature.sensor import ApparentTemperatureSensor
 from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorStateClass
 from homeassistant.components.weather import (
@@ -33,6 +22,18 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
+from pytest_homeassistant_custom_component.common import assert_setup_component
+
+from custom_components.apparent_temperature.const import (
+    ATTR_HUMIDITY_SOURCE,
+    ATTR_HUMIDITY_SOURCE_VALUE,
+    ATTR_TEMPERATURE_SOURCE,
+    ATTR_TEMPERATURE_SOURCE_VALUE,
+    ATTR_WIND_SPEED_SOURCE,
+    ATTR_WIND_SPEED_SOURCE_VALUE,
+    DOMAIN,
+)
+from custom_components.apparent_temperature.sensor import ApparentTemperatureSensor
 
 TEST_UNIQUE_ID: Final = "test_id"
 TEST_NAME: Final = "test_name"
@@ -244,7 +245,7 @@ async def test_entity_initialization(hass: HomeAssistant):
 
 
 @pytest.mark.parametrize(
-    "temp, humi, wind, expected",
+    ("temp", "humi", "wind", "expected"),
     [
         (12, 32, 10, "7.36460604026573"),
         (20, 0, 0, "15.75"),
