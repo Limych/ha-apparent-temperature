@@ -61,6 +61,19 @@ sensor:
       - sensor.basement_humidity
 ```
 
+#### Independent Temperature and Humidity Entities but wind by an Weather-Entity Example
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: apparent_temperature
+    name: 'Garden Feels Like Temperature'
+    source:
+      - weather.home
+      - sensor.basement_temperature
+      - sensor.basement_humidity
+```
+
 <p align="center">* * *</p>
 I put a lot of work into making this repo and component available and updated to inspire and help others! I will be glad to receive thanks from you — it will give me new strength and add enthusiasm:
 <p align="center"><br>
