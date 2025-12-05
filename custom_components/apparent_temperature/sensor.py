@@ -67,11 +67,16 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+CONF_PRECISION = "precision"
+
 PLATFORM_SCHEMA = cv.PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_SOURCE): cv.entity_ids,
         vol.Optional(CONF_NAME): cv.string,
         vol.Optional(CONF_UNIQUE_ID): cv.string,
+        vol.Optional(CONF_PRECISION, default=1): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=6)
+        ),
     }
 )
 
@@ -93,6 +98,7 @@ async def async_setup_platform(
                 config.get(CONF_UNIQUE_ID),
                 config.get(CONF_NAME),
                 expand_entity_ids(hass, config.get(CONF_SOURCE)),
+                config.get(CONF_PRECISION),
             )
         ]
     )
@@ -107,14 +113,18 @@ class ApparentTemperatureSensor(SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_should_poll = False
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-    _attr_suggested_display_precision = 1
 
     def __init__(
-        self, unique_id: str | None, name: str | None, sources: list[str]
+        self,
+        unique_id: str | None,
+        name: str | None,
+        sources: list[str],
+        precision: int = 1,
     ) -> None:
         """Class initialization."""
         self._attr_unique_id = unique_id
         self._attr_native_value = None
+        self._attr_suggested_display_precision = precision
 
         self._name = name
         self._sources = sources

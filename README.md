@@ -56,6 +56,7 @@ sensor:
 sensor:
   - platform: apparent_temperature
     name: 'Basement Feels Like Temperature'
+    precision: 2
     source:
       - sensor.basement_temperature
       - sensor.basement_humidity
@@ -94,6 +95,10 @@ I put a lot of work into making this repo and component available and updated to
 
 > **_Note_**:
 > You can use site [uuidgenerator.net](https://www.uuidgenerator.net/) to generate unique ID's.
+
+**precision**\
+  _(integer) (Optional) (Default value: 1)_\
+  Number of decimal places to display (0-6).
 
 ## Track updates
 
