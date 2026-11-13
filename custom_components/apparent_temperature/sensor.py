@@ -35,7 +35,6 @@ from homeassistant.const import (
     CONF_NAME,
     CONF_SOURCE,
     CONF_UNIQUE_ID,
-    EVENT_HOMEASSISTANT_START,
     PERCENTAGE,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
@@ -158,9 +157,11 @@ class ApparentTemperatureSensor(SensorEntity):
 
     def _setup_sources(self) -> list[str]:
         """Set sources for entity and return list of sources to track."""
-        entities = set()
         for entity_id in self._sources:
-            state: State = self.hass.states.get(entity_id)
+            state: State | None = self.hass.states.get(entity_id)
+            if state is None:
+                continue
+
             domain = split_entity_id(state.entity_id)[0]
             device_class = state.attributes.get(ATTR_DEVICE_CLASS)
             unit_of_measurement = state.attributes.get(ATTR_UNIT_OF_MEASUREMENT)
@@ -169,60 +170,46 @@ class ApparentTemperatureSensor(SensorEntity):
                 self._temp = entity_id
                 self._humd = entity_id
                 self._wind = entity_id
-                entities.add(entity_id)
             elif domain == CLIMATE_DOMAIN:
                 self._temp = entity_id
                 self._humd = entity_id
-                entities.add(entity_id)
             elif (
                 device_class == SensorDeviceClass.TEMPERATURE
                 or unit_of_measurement in UnitOfTemperature
             ):
                 self._temp = entity_id
-                entities.add(entity_id)
             elif (
                 device_class == SensorDeviceClass.HUMIDITY
                 or unit_of_measurement == PERCENTAGE
             ):
                 self._humd = entity_id
-                entities.add(entity_id)
             elif unit_of_measurement in UnitOfSpeed:
                 self._wind = entity_id
-                entities.add(entity_id)
             elif entity_id.find("temperature") >= 0:
                 self._temp = entity_id
-                entities.add(entity_id)
             elif entity_id.find("humidity") >= 0:
                 self._humd = entity_id
-                entities.add(entity_id)
             elif entity_id.find("wind") >= 0:
                 self._wind = entity_id
-                entities.add(entity_id)
 
-        return list(entities)
+        return list(self._sources)
 
     async def async_added_to_hass(self) -> None:
-        """Register callbacks."""
+        """Track all sources, including those unavailable during setup."""
 
-        # pylint: disable=unused-argument
         @callback
-        def sensor_state_listener(event: Event) -> None:  # noqa: ARG001
-            """Handle device state changes."""
+        def sensor_state_listener(_event: Event) -> None:
+            """Classify sources and refresh when their states change."""
+            self._setup_sources()
             self.async_schedule_update_ha_state(force_refresh=True)
 
-        # pylint: disable=unused-argument
-        @callback
-        def sensor_startup(event: Event) -> None:  # noqa: ARG001
-            """Update entity on startup."""
+        self.async_on_remove(
             async_track_state_change_event(
-                self.hass, self._setup_sources(), sensor_state_listener
+                self.hass, self._sources, sensor_state_listener
             )
-
-            self.async_schedule_update_ha_state(
-                force_refresh=True
-            )  # Force first update
-
-        self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_START, sensor_startup)
+        )
+        self._setup_sources()
+        self.async_schedule_update_ha_state(force_refresh=True)
 
     @staticmethod
     def _has_state(state: str | None) -> bool:

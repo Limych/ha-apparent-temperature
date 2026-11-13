@@ -207,6 +207,28 @@ async def test__setup_sources(hass: HomeAssistant):
     assert entity._wind == "sensor.test_wind_speed_no_unit"
 
 
+async def test__setup_sources_waits_for_missing_entities(hass: HomeAssistant):
+    """Keep tracking sources that have no state during setup."""
+    sources = ["sensor.delayed_temperature", "sensor.delayed_humidity"]
+    entity = ApparentTemperatureSensor(None, TEST_NAME, sources)
+    entity.hass = hass
+
+    assert entity._setup_sources() == sources
+    assert entity._temp is None
+    assert entity._humd is None
+
+    hass.states.async_set(
+        sources[0], "20", {"device_class": "temperature", "unit_of_measurement": "°C"}
+    )
+    hass.states.async_set(
+        sources[1], "40", {"device_class": "humidity", "unit_of_measurement": "%"}
+    )
+
+    assert entity._setup_sources() == sources
+    assert entity._temp == sources[0]
+    assert entity._humd == sources[1]
+
+
 async def test_entity_initialization(hass: HomeAssistant):
     """Test sensor initialization."""
     entity = ApparentTemperatureSensor(None, TEST_NAME, TEST_SOURCES)
@@ -285,6 +307,73 @@ async def test_async_setup_platform(hass: HomeAssistant, temp, humi, wind, expec
     assert state.attributes[ATTR_WIND_SPEED_SOURCE_VALUE] == pytest.approx(
         wind / 3.6, 0.01
     )
+
+
+async def test_sources_appear_after_startup(hass: HomeAssistant):
+    """Calculate when configured sources appear after the platform starts."""
+    sources = ["sensor.delayed_temperature", "sensor.delayed_humidity"]
+    assert await async_setup_component(
+        hass,
+        "sensor",
+        {
+            "sensor": [
+                {
+                    CONF_PLATFORM: DOMAIN,
+                    "name": "Delayed Apparent Temperature",
+                    CONF_SOURCE: sources,
+                }
+            ]
+        },
+    )
+    await hass.async_start()
+    await hass.async_block_till_done()
+
+    hass.states.async_set(
+        sources[0], "20", {"device_class": "temperature", "unit_of_measurement": "°C"}
+    )
+    hass.states.async_set(
+        sources[1], "40", {"device_class": "humidity", "unit_of_measurement": "%"}
+    )
+    await hass.async_block_till_done()
+
+    state = hass.states.get("sensor.delayed_apparent_temperature")
+    assert state is not None
+    assert state.state not in ("unknown", "unavailable")
+    assert state.attributes[ATTR_TEMPERATURE_SOURCE] == sources[0]
+    assert state.attributes[ATTR_HUMIDITY_SOURCE] == sources[1]
+
+
+async def test_platform_setup_after_home_assistant_started(hass: HomeAssistant):
+    """Initialize without waiting for a startup event that has passed."""
+    await hass.async_start()
+    sources = ["sensor.running_temperature", "sensor.running_humidity"]
+    hass.states.async_set(
+        sources[0], "20", {"device_class": "temperature", "unit_of_measurement": "°C"}
+    )
+    hass.states.async_set(
+        sources[1], "40", {"device_class": "humidity", "unit_of_measurement": "%"}
+    )
+
+    assert await async_setup_component(
+        hass,
+        "sensor",
+        {
+            "sensor": [
+                {
+                    CONF_PLATFORM: DOMAIN,
+                    "name": "Running Apparent Temperature",
+                    CONF_SOURCE: sources,
+                }
+            ]
+        },
+    )
+    await hass.async_block_till_done()
+
+    state = hass.states.get("sensor.running_apparent_temperature")
+    assert state is not None
+    assert state.state not in ("unknown", "unavailable")
+    assert state.attributes[ATTR_TEMPERATURE_SOURCE] == sources[0]
+    assert state.attributes[ATTR_HUMIDITY_SOURCE] == sources[1]
 
 
 async def test__get_temperature(hass: HomeAssistant):
