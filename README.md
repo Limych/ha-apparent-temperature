@@ -82,6 +82,9 @@ I put a lot of work into making this repo and component available and updated to
 > You can use groups of entities as a data source. These groups will be automatically expanded to individual entities.
 
 > **_Note_**:\
+> Source entities can appear after Home Assistant starts. The apparent temperature sensor will calculate a value when its temperature and humidity sources become available.
+
+> **_Note_**:\
 > If you specify several sources of the same type of data (for example, a weather provider and a separate temperature sensor), the sensor uses only one of them as a source (the one that will be the last in the list). Therefore, the result of calculations can be unpredictable.
 
 **name:**\
